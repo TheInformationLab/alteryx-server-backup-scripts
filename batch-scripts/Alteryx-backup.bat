@@ -14,11 +14,11 @@
 :: Set variables for Log, Temp, Network, and Application Paths
 ::
 :: Please update these values as appropriate for your environment. Note
-:: that spaces should be avoided in the LogDir, TempDir, and NetworkDir paths.
+:: that spaces should be avoided in the BatchLogDir, TempDir, and NetworkDir paths.
 :: The trailing slash is also required for these paths.
 ::-----------------------------------------------------------------------------
 
-SET LogDir=D:\Alteryx\BackupLogs\
+SET BatchLogDir=D:\Alteryx\BackupLogs\
 SET TempDir=D:\Temp\
 SET NetworkDir=D:\Alteryx\Backups\
 SET AlteryxService="C:\Program Files\Alteryx\bin\AlteryxService.exe"
@@ -35,7 +35,7 @@ FOR /f %%a IN ('WMIC OS GET LocalDateTime ^| FIND "."') DO SET DTS=%%a
 SET DateTime=%DTS:~0,4%%DTS:~4,2%%DTS:~6,2%_%DTS:~8,2%%DTS:~10,2%%DTS:~12,2%
 SET /a tztemp=%DTS:~21%/60
 SET tzone=UTC%tztemp%
-SET BackupLog=%LogDir%BackupLog%datetime%.log
+SET BackupLog=%BatchLogDir%BackupLog%datetime%.log
 
 echo %date% %time% %tzone%: Starting backup process... > %BackupLog%
 echo. >> %BackupLog%
