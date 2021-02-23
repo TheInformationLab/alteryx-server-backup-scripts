@@ -10,7 +10,7 @@
 ::-----------------------------------------------------------------------------
 
 SET GalleryLogDir=C:\ProgramData\Alteryx\
-SET MoveLogDir=D:\Alteryx\MoveLogs\
+SET BatchLogDir=D:\Alteryx\MoveLogs\
 SET TempDir=D:\Temp\
 SET OutputDir=D:\Alteryx\AlteryxLogs\
 SET ZipUtil="C:\Program Files\7-Zip\7z.exe"
@@ -30,7 +30,7 @@ SET DateTime=%DTS:~0,4%%DTS:~4,2%%DTS:~6,2%_%DTS:~8,2%%DTS:~10,2%%DTS:~12,2%
 SET /a tztemp=%DTS:~21%/60
 SET tzone=UTC%tztemp%
 SET TempDest=%TempDir%ServerLogs_%DateTime%
-SET MoveLog=%MoveLogDir%MoveLog%datetime%.log
+SET MoveLog=%BatchLogDir%MoveLog%datetime%.log
 
 echo %date% %time% %tzone%: Starting log movement process... > %MoveLog%
 echo. >> %MoveLog%
@@ -62,7 +62,7 @@ echo. >> %MoveLog%
 echo %date% %time% %tzone%: Moving archive to network storage >> %MoveLog%
 echo. >> %MoveLog%
 
-copy %TempDest%.7z %OutputDir%ServerBackup_%datetime%.7z >> %MoveLog%
+copy %TempDest%.7z %OutputDir%ServerLogs_%datetime%.7z >> %MoveLog%
 
 del %TempDest%.7z >> %MoveLog%
 rmdir /S /Q %TempDest% >> %MoveLog%
