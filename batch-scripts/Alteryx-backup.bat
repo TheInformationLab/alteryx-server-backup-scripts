@@ -59,16 +59,6 @@ echo. >> %BackupLog%
 echo %date% %time% %tzone%: Stopping Alteryx Service... >> %BackupLog%
 echo. >> %BackupLog%
 
-:WorkflowActiveState
-tasklist /FI "imagename eq AlteryxEngineCmd.exe" /NH 2>NUL | find /I /N "AlteryxEngineCmd.exe">NUL
-IF %errorlevel% EQU 1 GOTO StopInitState
-echo %date% %time% %tzone%: a Workflow is running >> %BackupLog%
-timeout /t 1 /nobreak >NUL
-SET /A COUNT=%COUNT%+1
-IF "%COUNT%" == "%MaxServiceWait%" GOTO SystemError
-GOTO WorkflowActiveState
-
-
 :StopInitState
 SC query AlteryxService | FIND "STATE" | FIND "RUNNING" >> %BackupLog%
 IF errorlevel 0 IF NOT errorlevel 1 GOTO StopService
