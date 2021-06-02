@@ -41,6 +41,7 @@ echo. >> %MoveLog%
 
 ROBOCOPY %GalleryLogDir% %TempDest% *.log /MOV /S /MINAGE:%LogAge% >> %MoveLog%
 ROBOCOPY %GalleryLogDir% %TempDest% *.dmp /MOV /S /MINAGE:%LogAge% >> %MoveLog%
+ROBOCOPY %GalleryLogDir%Gallery\Logs\ %TempDest%\Gallery\Logs\ *.csv /MOV /S /MINAGE:%LogAge% >> %MoveLog%
 
 ::-----------------------------------------------------------------------------
 :: This section compresses the logs to a single zip archive
