@@ -10,6 +10,8 @@ const connection = new Mongo();
 const db = connection.getDB(databaseName);
 
 // Find all the documents where "enabled" is true
+// FIXME: the AS_schedules doesnt appear to have an enabled entry. 
+// FIXME: so the api must be returning that value from somewhere else. need to locate.
 const documentsToUpdate = db.AS_schedules.find({ enabled: true }).toArray();
 
 // Update the "enabled" value to false for all the retrieved documents
