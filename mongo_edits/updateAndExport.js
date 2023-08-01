@@ -17,5 +17,9 @@ const documentsToUpdate = db.AS_schedules.find({ enabled: true }).toArray();
 // Update the "enabled" value to false for all the retrieved documents
 db.AS_schedules.updateMany({ enabled: true }, { $set: { enabled: false } });
 
+// Disconnect from the MongoDB instance
+connection.close();
+
 // Write the documentsToUpdate array to a JSON file
 fs.writeFileSync(outputFile, JSON.stringify(documentsToUpdate, null, 2));
+
