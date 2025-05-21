@@ -2,34 +2,47 @@
 # Based on: https://help.alteryx.com/current/en/server/configure/configure-server-ssl-tls.html
 
 param(
-    [Parameter(Position=0, Mandatory=$true)]
+    [Parameter(Position=0, Mandatory=$false)]
     [string]$Thumbprint, # New certificate thumbprint (no spaces)
     [Parameter(Mandatory=$false)]
     [string]$Port = "443", # Change if using a non-default port
     [Parameter(Mandatory=$false)]
     [string]$LogPath, # Optional: custom log file path
     [Parameter(Mandatory=$false)]
-    [switch]$Help # Show usage/help
+    [Alias('h','help')]
+    [switch]$ShowHelp # Unified help switch
 )
 
-if ($Help) {
+if ($ShowHelp) {
     Write-Host @"
-Usage: .\update-ssl-key.ps1 <Thumbprint> [-Port <port>] [-LogPath <log file path>] [-Help]
-       .\update-ssl-key.ps1 -Thumbprint <thumbprint> [-Port <port>] [-LogPath <log file path>] [-Help]
+Usage: .\update-ssl-key.ps1 <Thumbprint> [-Port <port>] [-LogPath <log file path>] [--Help|--help|-h]
+       .\update-ssl-key.ps1 -Thumbprint <thumbprint> [-Port <port>] [-LogPath <log file path>] [--Help|--help|-h]
 
 Parameters:
   <Thumbprint> (Required, Positional) Thumbprint of the new SSL certificate (no spaces).
   -Thumbprint  (Optional, Named) Thumbprint of the new SSL certificate (no spaces).
   -Port        (Optional, Named) Port number to bind the SSL certificate to. Default is 443.
   -LogPath     (Optional, Named) Path to the log file. Default is 'ssl_update.log' in the script directory.
-  -Help        (Optional, Named) Show this help message and exit.
+  --Help, --help, -h  (Optional, Named) Show this help message and exit.
 
 Examples:
   .\update-ssl-key.ps1 ABCDEF1234567890...
   .\update-ssl-key.ps1 ABCDEF1234567890... -Port 445
   .\update-ssl-key.ps1 -Thumbprint ABCDEF1234567890... -LogPath "C:\logs\ssl_update.log"
 "@
-    exit 0
+    return
+}
+
+# Check for admin permissions
+if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    Write-Host "ERROR: This script must be run as an administrator."
+    exit 1
+}
+
+if (-not $Thumbprint) {
+    Write-Host "ERROR: The Thumbprint parameter is required unless --Help/--help/-h is specified."
+    Write-Host "Use --Help for usage information."
+    exit 1
 }
 
 # Set default log file name if not provided
