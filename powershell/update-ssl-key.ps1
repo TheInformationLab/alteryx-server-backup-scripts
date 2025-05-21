@@ -54,9 +54,22 @@ Write-Log "Starting SSL certificate update process."
 Write-Log "Stopping AlteryxService..."
 Stop-Service -Name "AlteryxService" -Force
 
-# Remove old SSL binding
-Write-Log "Removing old SSL certificate binding from port $Port..."
-netsh http delete sslcert ipport=0.0.0.0:$Port | ForEach-Object { Write-Log $_ }
+# Check if an SSL cert is currently bound to the target ip/port
+$sslCerts = netsh http show sslcert
+$bindingPattern = "IP:port[ ]*0.0.0.0:$Port"
+$hasBinding = $false
+foreach ($line in $sslCerts) {
+    if ($line -match $bindingPattern) {
+        $hasBinding = $true
+        break
+    }
+}
+if ($hasBinding) {
+    Write-Log "An SSL certificate is currently bound to 0.0.0.0:$Port. Removing old binding..."
+    netsh http delete sslcert ipport=0.0.0.0:$Port | ForEach-Object { Write-Log $_ }
+} else {
+    Write-Log "No SSL certificate is currently bound to 0.0.0.0:$Port. Skipping removal step."
+}
 
 # Add new SSL binding
 Write-Log "Adding new SSL certificate binding to port $Port..."
