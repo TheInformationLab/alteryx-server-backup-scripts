@@ -67,6 +67,8 @@ Write-Log "Starting SSL certificate update process."
 Write-Log "Stopping AlteryxService..."
 Stop-Service -Name "AlteryxService" -Force
 
+# TODO: cert check is not correctly checking if the cert bound.
+# TODO: add a check to see if cert matches the thumbprint
 # Check if an SSL cert is currently bound to the target ip/port
 $sslCerts = netsh http show sslcert
 $bindingPattern = "IP:port[ ]*0.0.0.0:$Port"
@@ -84,6 +86,7 @@ if ($hasBinding) {
     Write-Log "No SSL certificate is currently bound to 0.0.0.0:$Port. Skipping removal step."
 }
 
+# TODO: not correctly checking erroring out if cert application fails
 # Add new SSL binding
 Write-Log "Adding new SSL certificate binding to port $Port..."
 netsh http add sslcert ipport=0.0.0.0:$Port certhash=$Thumbprint appid=$AppId | ForEach-Object { Write-Log $_ }
