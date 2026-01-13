@@ -1,0 +1,133 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Configuration file for Alteryx Server backup automation",
+  
+  "BackupConfiguration": {
+    "DefaultBackupMode": "Full",
+    "comment_DefaultBackupMode": "Default backup mode if not specified via parameter. Options: Full, DatabaseOnly, ConfigOnly",
+    
+    "TempDirectory": "D:\\Temp",
+    "comment_TempDirectory": "Staging directory for backup operations. Requires 2x MongoDB size free space.",
+    
+    "LocalBackupPath": "D:\\Alteryx\\Backups",
+    "comment_LocalBackupPath": "Local destination for backup archives",
+    
+    "NetworkBackupPaths": [
+      "\\\\backup-server\\alteryx\\"
+    ],
+    "comment_NetworkBackupPaths": "Array of UNC paths or mapped drives for network backup copies. Leave empty for local-only.",
+    
+    "LogDirectory": "D:\\Alteryx\\BackupLogs",
+    "comment_LogDirectory": "Directory for backup execution logs",
+    
+    "RetentionDays": {
+      "Full": 30,
+      "comment_Full": "Retention period for Full backups (MongoDB + config files)",
+      "DatabaseOnly": 14,
+      "comment_DatabaseOnly": "Retention period for DatabaseOnly backups (MongoDB only)",
+      "ConfigOnly": 30,
+      "comment_ConfigOnly": "Retention period for ConfigOnly backups (config files only)"
+    }
+  },
+  
+  "ServiceConfiguration": {
+    "MaxServiceWaitSeconds": 7200,
+    "comment_MaxServiceWaitSeconds": "Maximum time to wait for service state transitions (default: 2 hours)",
+    
+    "MaxWorkflowWaitSeconds": 3600,
+    "comment_MaxWorkflowWaitSeconds": "Maximum time to wait for active workflows to complete (default: 1 hour)",
+    
+    "ForceStopWorkflows": false,
+    "comment_ForceStopWorkflows": "Whether to force-kill workflows if timeout exceeded. WARNING: May cause workflow failures.",
+    
+    "StopServiceForExternalDB": false,
+    "comment_StopServiceForExternalDB": "Whether to stop AlteryxService for self-managed MongoDB backups (not recommended)"
+  },
+  
+  "MongoDBConfiguration": {
+    "Type": "auto",
+    "comment_Type": "MongoDB deployment type. Options: auto (detect from RuntimeSettings.xml), embedded, self-managed",
+    
+    "EmbeddedMongoDB": {
+      "UseAlteryxService": true,
+      "comment_UseAlteryxService": "Use AlteryxService.exe emongodump command for embedded MongoDB"
+    },
+    
+    "SelfManagedMongoDB": {
+      "ConnectionString": "",
+      "comment_ConnectionString": "MongoDB connection string (e.g., mongodb://host:port/db). Leave empty to use individual settings.",
+      
+      "Host": "",
+      "comment_Host": "MongoDB host (alternative to connection string)",
+      
+      "Port": 27017,
+      "comment_Port": "MongoDB port (default: 27017)",
+      
+      "Database": "AlteryxGallery",
+      "comment_Database": "Database name to backup",
+      
+      "AuthDatabase": "admin",
+      "comment_AuthDatabase": "Authentication database",
+      
+      "Username": "",
+      "comment_Username": "MongoDB username (if authentication enabled). Password will be prompted.",
+      
+      "UseCompression": true,
+      "comment_UseCompression": "Use --gzip option for mongodump (recommended)"
+    }
+  },
+  
+  "FilesConfiguration": {
+    "BackupKeys": true,
+    "comment_BackupKeys": "Include Keys folder in backup (encryption keys for DCM and Gallery connections)",
+    
+    "BackupConfigFile": true,
+    "comment_BackupConfigFile": "Include alteryx.config if modified (2020.1+ only)",
+    
+    "BackupMongoPasswords": true,
+    "comment_BackupMongoPasswords": "Export MongoDB passwords from AlteryxService (recommended)",
+    
+    "IncludeMetadata": true,
+    "comment_IncludeMetadata": "Generate metadata file with system info in backup archive"
+  },
+  
+  "ValidationConfiguration": {
+    "VerifyArchiveIntegrity": true,
+    "comment_VerifyArchiveIntegrity": "Validate archive after creation (recommended)",
+    
+    "CalculateChecksums": true,
+    "comment_CalculateChecksums": "Generate SHA256 checksums for files (recommended)",
+    
+    "MinimumBackupSizeMB": {
+      "Full": 1.0,
+      "comment_Full": "Minimum expected archive size for Full backups (MB)",
+      "DatabaseOnly": 1.0,
+      "comment_DatabaseOnly": "Minimum expected archive size for DatabaseOnly backups (MB)",
+      "ConfigOnly": 0.1,
+      "comment_ConfigOnly": "Minimum expected archive size for ConfigOnly backups (MB)"
+    }
+  },
+  
+  "NotificationConfiguration": {
+    "Enabled": false,
+    "comment_Enabled": "Enable email notifications (Phase 7 feature)",
+    
+    "SMTPServer": "",
+    "comment_SMTPServer": "SMTP server hostname",
+    
+    "SMTPPort": 587,
+    "comment_SMTPPort": "SMTP server port (default: 587 for TLS)",
+    
+    "UseSSL": true,
+    "comment_UseSSL": "Use SSL/TLS for SMTP connection",
+    
+    "FromAddress": "",
+    "comment_FromAddress": "Email sender address",
+    
+    "ToAddresses": [],
+    "comment_ToAddresses": "Array of recipient email addresses",
+    
+    "OnlyOnFailure": true,
+    "comment_OnlyOnFailure": "Only send email on backup failure (true) or always send (false)"
+  }
+}

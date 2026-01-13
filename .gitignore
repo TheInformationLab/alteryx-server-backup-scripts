@@ -1,1 +1,35 @@
 powershell/ssl_update.log
+
+# Backup artifacts
+*.zip
+*.7z
+*Backup*.zip
+*backup*.zip
+
+# Backup logs
+*BackupLog*.log
+*backup*.log
+
+# Temporary files
+temp/
+Temp/
+*.tmp
+*.swp
+
+# Test outputs
+test-output/
+coverage/
+
+# Sensitive configuration
+config/backup-config.json
+*password*.txt
+*token*.txt
+*secret*.txt
+
+# IDE and system files
+.DS_Store
+Thumbs.db
+*.suo
+*.user
+.vscode/
+.idea/
