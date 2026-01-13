@@ -90,9 +90,9 @@ This PRD outlines requirements for modernizing the Alteryx Server backup automat
   - ConfigOnly: `ServerBackup_Config_YYYYMMDD_HHmmss.zip`
 
 **Use Cases:**
-- **DatabaseOnly**: Frequent DB-only backups between full backups (e.g., hourly DB snapshots)
+- **DatabaseOnly**: Nightly DB backups between weekly full backups (Mon-Sat nightly snapshots)
 - **ConfigOnly**: After configuration changes without DB impact (e.g., SSL updates, worker config changes)
-- **Full**: Standard comprehensive backup (e.g., nightly scheduled backup)
+- **Full**: Comprehensive weekly backup (e.g., Sunday scheduled backup)
 
 ### 2. MongoDB Backup Requirements
 
@@ -677,23 +677,23 @@ try {
 - Test with service account
 - Verify logging works when running unattended
 - Verify exit codes trigger Task Scheduler alerts
-- Test multiple scheduled tasks for different modes (e.g., hourly DB backups, nightly full backups)
+- Test multiple scheduled tasks for different modes (e.g., weekly Full backups, nightly DB backups)
 
 ---
 
 ## Use Case Scenarios
 
-### Scenario 1: Standard Daily Full Backup
-**Schedule:** Nightly at 2:00 AM  
+### Scenario 1: Weekly Comprehensive Full Backup
+**Schedule:** Weekly (Sunday) at 2:00 AM  
 **Mode:** Full  
 **Purpose:** Comprehensive backup including MongoDB and all configuration files  
 **Command:** `Invoke-AlteryxBackup.ps1` (default mode)
 
-### Scenario 2: Frequent Database Snapshots
-**Schedule:** Every 4 hours during business hours  
+### Scenario 2: Nightly Database Snapshots
+**Schedule:** Nightly (Monday-Saturday) at 2:00 AM  
 **Mode:** DatabaseOnly  
-**Purpose:** Capture database state frequently without configuration overhead  
-**Command:** `Invoke-AlteryxBackup.ps1 -BackupMode DatabaseOnly -RetentionDays 7`
+**Purpose:** Capture database state nightly between weekly full backups  
+**Command:** `Invoke-AlteryxBackup.ps1 -BackupMode DatabaseOnly -RetentionDays 14`
 
 ### Scenario 3: Post-Configuration Change Backup
 **Schedule:** Ad-hoc after SSL/configuration changes  
@@ -744,7 +744,7 @@ try {
 ### Phase 5: Pilot Deployment (Week 6)
 - Deploy to production alongside existing batch script
 - Run both scripts in parallel for comparison
-- Test multiple scheduled tasks (e.g., nightly Full + 4-hour DatabaseOnly)
+- Test multiple scheduled tasks (e.g., weekly Full + nightly DatabaseOnly)
 - Monitor results and logs
 - Collect feedback
 
@@ -888,9 +888,9 @@ The project will be considered successful when:
 | Service Interruption | Yes | Yes | No |
 | Typical Size | Large | Large | Small |
 | Typical Duration | Long | Medium | Short |
-| Use Case | Nightly backup | Frequent snapshots | Config changes |
-| Recommended Frequency | Daily | 2-4 hours | Ad-hoc |
-| Recommended Retention | 30 days | 7 days | 14 days |
+| Use Case | Weekly comprehensive | Nightly snapshots | Config changes |
+| Recommended Frequency | Weekly | Daily | Ad-hoc |
+| Recommended Retention | 30 days | 14 days | 30 days |
 
 ### C. Glossary
 - **Embedded MongoDB**: MongoDB instance installed and managed by Alteryx Server installer
