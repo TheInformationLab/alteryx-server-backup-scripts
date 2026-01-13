@@ -72,6 +72,8 @@ All scripts MUST generate detailed logs with timestamps for audit trails and tro
 
 **Documentation Updates**: README.md MUST be updated for new scripts or changed parameters. Configuration examples MUST reflect current production requirements. Known issues or limitations MUST be documented.
 
+**Commit Strategy**: All commits MUST follow Conventional Commits specification (https://www.conventionalcommits.org/). Commit messages MUST use the format: `<type>(<scope>): <description>` where type is one of: `feat` (new feature), `fix` (bug fix), `docs` (documentation), `refactor` (code refactoring), `test` (test changes), `chore` (maintenance). Breaking changes MUST include `BREAKING CHANGE:` in commit footer. Scope SHOULD identify affected component (e.g., backup, ssl, logging).
+
 ## Governance
 
 This Constitution represents the non-negotiable principles and practices for maintaining the Alteryx Server Backup Scripts project. All script modifications, additions, and reviews MUST verify compliance with these principles.
